@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String?
+  role         UserRole @default(VIEWER)
+  surveys      Survey[]
+  createdAt    DateTime @default(now())
+}
+
+model Survey {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  ownerId     String
+  owner       User         @relation(fields: [ownerId], references: [id])
+  questions   Question[]
+  responses   Response[]
+  summaries   Summary[]
+  status      SurveyStatus @default(DRAFT)
+  createdAt   DateTime     @default(now())
+}
+
+enum SurveyStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+model Question {
+  id       String       @id @default(cuid())
+  surveyId String
+  survey   Survey       @relation(fields: [surveyId], references: [id])
+  type     QuestionType
+  text     String
+  options  Json?
+  order    Int
+  answers  Answer[]
+}
+
+enum QuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  SINGLE_CHOICE
+  MULTI_CHOICE
+  LINEAR_SCALE
+}
+
+model Response {
+  id          String   @id @default(cuid())
+  surveyId    String
+  survey      Survey   @relation(fields: [surveyId], references: [id])
+  submittedAt DateTime @default(now())
+  answers     Answer[]
+  meta        Json?
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  responseId String
+  response   Response @relation(fields: [responseId], references: [id])
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  valueText  String?
+  valueJson  Json?
+}
+
+model Summary {
+  id        String       @id @default(cuid())
+  surveyId  String
+  survey    Survey       @relation(fields: [surveyId], references: [id])
+  scope     SummaryScope
+  targetId  String?
+  content   String
+  meta      Json?
+  model     String
+  createdAt DateTime     @default(now())
+}
+
+enum SummaryScope {
+  PER_QUESTION
+  SURVEY_GLOBAL
+  CLUSTER
+}
+
+/// Збережемо ембеддінги як JSON масив чисел (для MVP)
+model Embedding {
+  id         String   @id @default(cuid())
+  surveyId   String
+  questionId String?
+  answerId   String?
+  vector     Json // number[]
+  dim        Int
+  createdAt  DateTime @default(now())
+}
