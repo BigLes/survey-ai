@@ -6,7 +6,7 @@ export function kmeans(vectors: number[][], k: number) {
     let centroids = vectors.slice(0, k).map(v => v.slice());
 
     const maxIter = 20;
-    let labels = new Array(vectors.length).fill(0);
+    const labels = new Array(vectors.length).fill(0);
 
     for (let iter = 0; iter < maxIter; iter++) {
 
