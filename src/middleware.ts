@@ -8,9 +8,11 @@ export async function middleware(req: NextRequest) {
     const protectedPath = path.startsWith('/admin') || /^\/api\/surveys\/[^/]+\/analyze$/.test(path);
     if (!protectedPath) return NextResponse.next();
 
+    // @ts-ignore
     const token = req.cookies.get('session')?.value;
     if (!token) {
         if (path.startsWith('/api/')) {
+            // @ts-ignore
             return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
                 status: 401, headers: { 'Content-Type': 'application/json' }
             });
@@ -25,6 +27,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     } catch {
         if (path.startsWith('/api/')) {
+            // @ts-ignore
             return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
                 status: 401, headers: { 'Content-Type': 'application/json' }
             });

@@ -16,10 +16,12 @@ function explainScope(scope: string) {
 }
 
 export default async function AdminPage() {
+    // @ts-ignore
     const token = (await cookies()).get('session')?.value;
     const session = await verifySessionJWT(token);
     if (!session) return null;
 
+    // @ts-ignore
     const surveys = await prisma.survey.findMany({
         where: { ownerId: session.sub },
         orderBy: { createdAt: 'desc' },

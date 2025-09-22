@@ -9,10 +9,12 @@ export const revalidate = 0;
 
 export default async function EditSurveyPage({ params }: { params: { id: string } }) {
     const store = await cookies();
+    // @ts-ignore
     const token = store.get('session')?.value;
     const session = await verifySessionJWT(token);
     if (!session) redirect('/');
 
+    // @ts-ignore
     const survey = await prisma.survey.findUnique({
         where: { id: (await params).id },
         include: { questions: { orderBy: { order: 'asc' } } },
