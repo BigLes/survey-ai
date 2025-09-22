@@ -69,7 +69,6 @@ ${clustersTxt}
 
 export async function analyzeSurvey(surveyId: string) {
 
-    // @ts-expect-error
     const questions = await prisma.question.findMany({
         where: { surveyId },
         include: { answers: true },
@@ -84,7 +83,6 @@ export async function analyzeSurvey(surveyId: string) {
                 .map((a) => a.valueText?.trim())
                 .filter((t): t is string => !!t && t.length > 0);
 
-            // @ts-expect-error
             await prisma.summary.deleteMany({
                 where: { surveyId, scope: 'PER_QUESTION', targetId: q.id },
             });
@@ -110,11 +108,9 @@ export async function analyzeSurvey(surveyId: string) {
                 buildQuestionPrompt(q.text, clusterSummaries, texts.length)
             );
 
-            // @ts-expect-error
             await prisma.summary.deleteMany({
                 where: { surveyId, scope: 'PER_QUESTION', targetId: q.id },
             });
-            // @ts-expect-error
             await prisma.summary.create({
                 data: {
                     surveyId,
@@ -146,7 +142,6 @@ export async function analyzeSurvey(surveyId: string) {
                 }
             }
 
-            // @ts-expect-error
             await prisma.summary.deleteMany({
                 where: { surveyId, scope: 'PER_QUESTION', targetId: q.id },
             });
@@ -212,7 +207,6 @@ export async function analyzeSurvey(surveyId: string) {
             .filter(Boolean) as string[]
     );
 
-    // @ts-expect-error
     await prisma.summary.deleteMany({
         where: { surveyId, scope: 'SURVEY_GLOBAL' },
     });
