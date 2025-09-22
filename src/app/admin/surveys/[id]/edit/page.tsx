@@ -28,9 +28,9 @@ export default async function EditSurveyPage({ params }: { params: { id: string 
         questions: survey.questions.map(q => ({
             id: q.id,
             text: q.text,
-            type: q.type,
+            type: q.type as any,
             order: q.order,
-            options: q.options
+            options: q.options as any
         }))
     };
 
