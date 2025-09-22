@@ -22,7 +22,7 @@ type InitialSurvey = {
     title: string;
     description: string | null;
     status: 'DRAFT'|'PUBLISHED';
-    questions: Array<{ id: string; text: string; type: QType; order: number; options?: any }>;
+    questions: Array<{ id: string; text: string; type: QType; order: number; options? }>;
 };
 
 export default function SurveyBuilder({
@@ -84,7 +84,7 @@ export default function SurveyBuilder({
             if (questions.some(q => !q.text.trim())) { setErr('У кожного питання має бути текст'); return; }
         }
 
-        const payloadBase: any = {
+        const payloadBase = {
             title: title.trim(),
             description: description.trim() || null,
             status
@@ -96,7 +96,7 @@ export default function SurveyBuilder({
                 ...payloadBase,
                 replaceQuestions: true,
                 questions: questions.map((q, idx) => {
-                    let options: any = null;
+                    let options = null;
                     if (q.type === 'SINGLE_CHOICE' || q.type === 'MULTI_CHOICE') {
                         const opts = (q.optionsText || '')
                             .split('\n')
@@ -132,7 +132,7 @@ export default function SurveyBuilder({
             }
             r.push('/admin');
             r.refresh();
-        } catch (e: any) {
+        } catch (e) {
             setErr(e?.message || 'Сталася помилка');
         } finally {
             setBusy(false);
@@ -169,7 +169,7 @@ export default function SurveyBuilder({
                 <select
                     className="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-black/20"
                     value={status}
-                    onChange={e=>setStatus(e.target.value as any)}
+                    onChange={e=>setStatus(e.target.value)}
                 >
                     <option value="DRAFT">DRAFT</option>
                     <option value="PUBLISHED">PUBLISHED</option>
