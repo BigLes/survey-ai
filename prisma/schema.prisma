@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -99,15 +96,4 @@ enum SummaryScope {
   PER_QUESTION
   SURVEY_GLOBAL
   CLUSTER
-}
-
-/// Збережемо ембеддінги як JSON масив чисел (для MVP)
-model Embedding {
-  id         String   @id @default(cuid())
-  surveyId   String
-  questionId String?
-  answerId   String?
-  vector     Json // number[]
-  dim        Int
-  createdAt  DateTime @default(now())
 }

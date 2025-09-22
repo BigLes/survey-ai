@@ -26,11 +26,6 @@ export default async function AdminPage() {
         include: { summaries: true }
     });
 
-    async function logout() {
-        'use server';
-        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'}/api/auth/logout`, { method: 'POST' });
-    }
-
     return (
         <main className="max-w-3xl mx-auto p-6">
             <div className="max-w-3xl mx-auto">
