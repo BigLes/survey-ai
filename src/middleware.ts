@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest) {
     }
 
     try {
-        const { payload } = await jwtVerify(token, secret);
+        await jwtVerify(token, secret);
         return NextResponse.next();
     } catch {
         if (path.startsWith('/api/')) {
