@@ -42,14 +42,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 
     const rawQs = Array.isArray(body.questions) ? body.questions : [];
-    const questions = rawQs.map((q: any, idx: number) => {
+    const questions = rawQs.map((q, idx: number) => {
         const text = String(q.text || '').trim();
         const type = q.type as string;
         const order = Number.isFinite(q.order) ? q.order : idx;
-        let options: any = null;
+        let options = null;
         if (type === 'SINGLE_CHOICE' || type === 'MULTI_CHOICE') {
             const opts = Array.isArray(q.options?.options) ? q.options.options : [];
-            options = { options: opts.filter((s: any) => typeof s === 'string' && s.trim()).map((s: string)=>s.trim()) };
+            options = { options: opts.filter((s) => typeof s === 'string' && s.trim()).map((s: string)=>s.trim()) };
         } else if (type === 'LINEAR_SCALE') {
             const min = Number.isFinite(q.options?.min) ? q.options.min : 1;
             const max = Number.isFinite(q.options?.max) ? q.options.max : 5;
@@ -60,7 +60,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
             options = { min, max, labels };
         }
         return { text, type, order, options };
-    }).filter((q: any) => q.text && q.type);
+    }).filter((q) => q.text && q.type);
 
     if (questions.length === 0) {
         return NextResponse.json({ error: 'Додайте хоча б одне питання' }, { status: 400 });
@@ -78,7 +78,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
             data: { title, description, status }
         });
         await tx.question.createMany({
-            data: questions.map((q: any) => ({
+            data: questions.map((q) => ({
                 surveyId: params.id,
                 text: q.text,
                 type: q.type,

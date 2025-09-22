@@ -20,7 +20,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
         data: {
             surveyId,
             meta: body.meta ?? {},
-            answers: { create: (body.answers ?? []).map((a: any) => ({
+            answers: { create: (body.answers ?? []).map((a) => ({
                     questionId: a.questionId,
                     valueText: a.valueText ?? null,
                     valueJson: a.valueJson ?? null
