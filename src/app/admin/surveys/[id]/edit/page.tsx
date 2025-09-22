@@ -8,12 +8,12 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function EditSurveyPage({ params }: { params: { id: string } }) {
-    // @ts-expect-error
+    // @ts-expect-error expected
     const token = (await cookies()).get('session')?.value;
     const session = await verifySessionJWT(token);
     if (!session) redirect('/');
 
-    // @ts-expect-error
+    // @ts-expect-error expected
     const survey = await prisma.survey.findUnique({
         where: { id: (await params).id },
         include: { questions: { orderBy: { order: 'asc' } } },
@@ -30,9 +30,9 @@ export default async function EditSurveyPage({ params }: { params: { id: string 
         questions: survey.questions.map(q => ({
             id: q.id,
             text: q.text,
-            type: q.type as any,
+            type: q.type,
             order: q.order,
-            options: q.options as any
+            options: q.options
         }))
     };
 
